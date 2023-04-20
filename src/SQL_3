@@ -1,0 +1,84 @@
+-- Создайте таблицу city с колонками city_id и city_name.
+
+CREATE TABLE city
+(
+    city_id bigserial NOT NULL PRIMARY KEY,
+    city_name VARCHAR(50) NOT NULL
+);
+
+-- Добавьте в таблицу employee колонку city_id.
+
+ALTER TABLE employee ADD COLUMN city_id varchar(50);
+
+-- Назначьте эту колонку внешним ключом. Свяжите таблицу employee с таблицей city.
+
+ALTER TABLE employee
+    ADD FOREIGN KEY (city_id) REFERENCES city(city_id);
+
+-- Ошибся при создании колонки в employee, поэтому изменю тип колонки city_id
+
+ALTER TABLE employee
+ALTER COLUMN city_id TYPE bigint USING 0; -- Использовал USING, потому что varchar не приводится к bigint по обычному
+UPDATE employee SET city_id = NULL; -- обнулил колонку
+
+ALTER TABLE employee
+    ADD FOREIGN KEY (city_id) REFERENCES city(city_id);
+
+
+--  Заполните таблицу city и назначьте работникам соответствующие города.
+
+
+INSERT INTO city (
+    city_name)
+VALUES ('Kaliningrad');
+
+INSERT INTO city (
+    city_name)
+VALUES ('Moscow');
+
+INSERT INTO city (
+    city_name)
+VALUES ('Saint-Petersburg');
+
+INSERT INTO city (
+    city_name)
+VALUES ('Kaluga');
+
+UPDATE employee SET city_id = 1
+WHERE id = 2;
+
+UPDATE employee SET city_id = 2
+WHERE id = 3;
+
+UPDATE employee SET city_id = 3
+WHERE id = 4;
+
+
+-- Задание 2
+-- Получите имена и фамилии сотрудников, а также города, в которых они проживают.
+
+SELECT first_name, last_name, city_name from employee
+JOIN city ON city.city_id = employee.city_id;
+
+-- Получите города, а также имена и фамилии сотрудников, которые в них проживают.
+-- Если в городе никто из сотрудников не живет, то вместо имени должен стоять null.
+
+SELECT city_name, first_name, last_name from city
+LEFT JOIN employee ON employee.id = city.city_id;
+
+-- Получите имена всех сотрудников и названия всех городов. Если в городе не живет никто из сотрудников, то вместо имени должен стоять null.
+-- Аналогично, если города для какого-то из сотрудников нет в списке, должен быть получен null.
+
+SELECT city_name, first_name, last_name from city
+FULL OUTER JOIN employee ON employee.id = city.city_id;
+
+-- Получите таблицу, в которой каждому имени должен соответствовать каждый город.
+
+SELECT first_name, city_name from employee
+CROSS JOIN city;
+
+-- Получите имена городов, в которых никто не живет.
+
+SELECT city_name, first_name, last_name from city
+LEFT JOIN employee ON employee.id = city.city_id
+WHERE first_name is null;

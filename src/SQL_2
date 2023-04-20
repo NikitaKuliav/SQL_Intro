@@ -1,0 +1,59 @@
+-- Задание 1
+
+INSERT INTO employee (
+    first_name, last_name, gender, age)
+VALUES ('Barbara', 'Daniels', 'female', 58);
+
+INSERT INTO employee (
+    first_name, last_name, gender, age)
+VALUES ('Mary', 'Jones', 'female', 18);
+
+INSERT INTO employee (
+    first_name, last_name, gender, age)
+VALUES ('Thomas', 'Casey', 'male', 35);
+
+Select first_name AS Имя,
+last_name AS Фамилия
+FROM employee;
+
+Select *
+FROM employee
+WHERE age > 50 OR age < 30;
+
+Select *
+FROM employee
+WHERE age > 30 AND age < 50;
+
+Select *
+FROM employee
+ORDER BY last_name desc;
+
+Select *
+FROM employee
+WHERE LENGTH(first_name) > 4;
+
+
+--Задание 2
+
+
+UPDATE employee
+SET first_name = 'German'
+WHERE ID = 3;
+
+UPDATE employee
+SET first_name = 'Mary'
+WHERE ID = 4;
+
+SELECT first_name AS Имя, SUM(age) AS Суммарный_возраст
+FROM employee
+GROUP BY Имя;
+
+SELECT first_name AS Имя, age AS Самый_юный
+FROM employee
+WHERE age = (SELECT min(age) FROM employee);
+
+SELECT first_name AS Имя, max(age) AS Максимальный_возраст
+FROM employee
+GROUP BY first_name
+HAVING count(first_name) > 1;
+
